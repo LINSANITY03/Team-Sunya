@@ -4,7 +4,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from database.models import RecommendationData, RecommendationJob
+from database.models import RecommendationData, RecommendationJob, CropRotationRecommendation
 from database.connection import get_db
 
 from services.location_service import is_inside_nepal
@@ -254,6 +254,41 @@ def get_all_recommendation_jobs(
             "error_message": row.error_message,
         }
 
+    # Retrieve rotations only for completed jobs.
+    completed_job_ids = [
+        job.id
+        for job in jobs
+        if job.status == "COMPLETED"
+    ]
+
+    rotations_by_job = {}
+    
+    if completed_job_ids:
+        rotation_rows = (
+            db.query(CropRotationRecommendation)
+            .filter(
+                CropRotationRecommendation.recommendation_id.in_(
+                    completed_job_ids
+                )
+            )
+            .order_by(
+                CropRotationRecommendation.recommendation_id,
+                CropRotationRecommendation.rank,
+            )
+            .all()
+        )
+
+        # Group rotations by recommendation ID.
+        for rotation in rotation_rows:
+            rotations_by_job.setdefault(
+                rotation.recommendation_id, []
+            ).append({
+                "rank": rotation.rank,
+                "score": rotation.score,
+                "sequence": rotation.sequence,
+                "rotation_data": rotation.rotation_data,
+            })
+
     recommendations = []
 
     for job in jobs:
@@ -268,7 +303,7 @@ def get_all_recommendation_jobs(
             "updated_at": job.updated_at,
             "error_message": job.error_message,
             "data_sources": sources_by_job.get(job.id, {}),
-            "results": job.result_data,
+            "results": rotations_by_job.get(job.id, []),
         })
 
     return {
