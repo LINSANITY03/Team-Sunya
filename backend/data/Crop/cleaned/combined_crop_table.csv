@@ -1,0 +1,22 @@
+Crop Name,Botanical Species Name,Botanical Family,Primary Agronomic Function,Terai,Hill,Mountain,Rooting depth (m),Category,Optimal pH Min,Optimal pH Max,Absolute pH Min,Absolute pH Max,Agronomic Notes
+Rice,Oryza sativa L.,Poaceae,Cash / Staple Food,Yes,Yes,Yes,0.5,Cereals & pseudocereals,5.5,7.0,4.5,9.0,"Highly adaptable to flooded, wet soils across a wide pH spectrum."
+Rice,Oryza sativa L.,Poaceae,Cash / Food,No,Yes,No,0.5,Cereals & pseudocereals,5.5,7.0,4.5,9.0,"Highly adaptable to flooded, wet soils across a wide pH spectrum."
+Wheat,Triticum aestivum L.,Poaceae,Cash / Staple Food,Yes,Yes,Yes,1.0,"Cereals & pseudocereals, forage/pasture, medicinals & aromatic",6.0,7.0,5.5,8.5,"Does best in neutral to slightly acidic, fertile loam soils."
+Corn,Zea mays L.,Poaceae,Cash / Food / Fodder,Yes,Yes,Yes,0.9,Cereals & pseudocereals,5.0,7.0,4.5,8.5,Sensitive to high acidity; performs poorly if soil is strongly acidic.
+Barley,Hordeum vulgare L.,Poaceae,Cash / Food,No,Yes,Yes,1.0,"Cereals & pseudocereals, medicinals & aromatic",6.5,7.5,6.0,8.0,Excellent tolerance to alkaline and moderately saline soil conditions.
+Barley,Hordeum vulgare var. nudum,Poaceae,Food Crop,No,No,Yes,1.0,Cereals & pseudocereals,6.5,7.5,6.0,8.0,Excellent tolerance to alkaline and moderately saline soil conditions.
+Finger Millet,Eleusine coracana (L.) Gaertn.,Poaceae,Food / Cash Crop,No,Yes,Yes,1.0,"Cereals & pseudocereals, forage/pasture, environmental",6.0,7.0,5.5,8.2,"Hardy crop that grows well in medium-textured, well-drained soils."
+Oat,Avena sativa L.,Poaceae,Fodder / Cash Crop,No,Yes,No,1.0,"Cereals & pseudocereals, cover crop",5.0,6.0,4.5,7.5,Moderately tolerant of acidic conditions compared to other cereals.
+Soybean,Glycine max (L.) Merr.,Fabaceae,Cash / Food Crop,No,Yes,No,0.6,Pulses (grain legumes),5.5,6.5,4.5,8.4,Prefers slightly acidic soils; crucial for effective nitrogen fixation.
+Lentil,Lens culinaris Medik.,Fabaceae,Cash Pulse Crop,Yes,No,No,0.6,"Pulses (grain legumes), medicinals & aromatic",5.5,7.5,4.5,8.2,Thrives in neutral soils close to pH 7; sensitive to waterlogging.
+Chickpea,Cicer arietinum L.,Fabaceae,Cash Pulse Crop,Yes,No,No,0.6,Pulses (grain legumes),6.0,8.5,4.7,9.5,Prefers neutral to slightly alkaline well-drained loam soils.
+Pigeonpea,Cajanus cajan (L.) Millsp.,Fabaceae,Cash Pulse Crop,Yes,No,No,0.6,Vegetables,5.0,7.0,4.5,8.4,"Highly adaptable to variable soil types, from sands to heavy clays."
+Black Gram,Vigna mungo (L.) Hepper,Fabaceae,Cash Pulse Crop,No,Yes,No,0.6,"Pulses (grain legumes), forage/pasture, medicinals & aromatic, cover crop, environmental",5.5,6.5,4.5,7.5,Performs best in well-drained loams or alluvial soils.
+Mungbean,Vigna radiata (L.) R. Wilczek,Fabaceae,Cash Pulse / Green Manure,Yes,No,No,0.6,"Pulses (grain legumes), forage/pasture, cover crop, environmental",5.5,6.2,4.3,8.3,Prefers well-drained sandy loams; sensitive to waterlogging.
+Dhaincha,Sesbania bispinosa (Jacq.) W.Wight,Fabaceae,Cover Crop / Green Manure,Yes,No,No,0.8,"Forage/pasture, materials, forest/wood, environmental, weed",5.5,7.0,4.3,9.9,Green manure crop; highly tolerant of alkalinity and waterlogging.
+Mustard,Brassica napus L. / B. rapa L.,Brassicaceae,Cash Oilseed Crop,Yes,Yes,Yes,1.0,"Forage/pasture, vegetables, materials",6.5,7.6,5.5,8.0,Sensitive to extreme soil acidity; benefits from limed soils.
+Flax,Linum usitatissimum L.,Linaceae,Cash Oilseed / Fiber,Yes,No,No,1.0,"Materials, medicinals & aromatic",6.0,6.5,5.5,7.0,"Prefers fertile, well-structured loamy soils."
+Potato,Solanum tuberosum L.,Solanaceae,Cash Tuber / Food,Yes,Yes,Yes,0.4,"Roots/tubers, medicinals & aromatic",5.0,6.2,4.2,8.5,Prefers acidic soil to suppress common scab disease.
+Tobacco,Nicotiana tabacum L.,Solanaceae,Industrial Cash Crop,Yes,No,No,0.7,Materials,5.0,6.5,4.5,7.5,"Grows best in light, well-drained, slightly acidic soils."
+Jute,Corchorus capsularis L.,Malvaceae,Cash Fiber Crop,Yes,No,No,0.8,Materials,6.5,7.0,5.0,8.6,"Thrives in rich alluvial soils under warm, humid conditions."
+Buckwheat,Fagopyrum esculentum Moench,Polygonaceae,Cash Pseudocereal / Food,No,No,Yes,1.0,"Cereals & pseudocereals, forage/pasture, vegetables, materials, cover crop",5.0,6.5,4.4,7.5,"Resilient crop capable of growing well in poor, acidic soils."
