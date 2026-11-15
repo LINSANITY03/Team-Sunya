@@ -152,3 +152,673 @@ The scoring results are ranked in descending order. The Top-K selector returns t
 ### Step 8: API Response
 The FastAPI backend exposes the recommendation engine through REST endpoints, allowing clients to submit planning parameters and receive structured crop rotation recommendations.
 
+## Data Sources
+
+### 1. NASA POWER — Weather and Solar Data
+
+**Provider:** NASA Langley Research Center  
+**Platform:** Prediction Of Worldwide Energy Resources (POWER)
+
+AgriCycle uses NASA POWER's Daily Point API to obtain meteorological and solar-related data for a specified geographic location and time period.
+
+**API Endpoint:**
+https://power.larc.nasa.gov/api/temporal/daily/point
+
+**Weather variables handled by AgriCycle:**
+- Precipitation
+- Mean temperature
+- Maximum temperature
+- Minimum temperature
+- Relative humidity
+- Wind measurements
+- Solar radiation
+- Wet-day information
+
+**API capabilities:**
+- Location-specific data using latitude and longitude.
+- Daily time-series data.
+- Configurable date ranges.
+- Multiple meteorological and solar parameters.
+- JSON and CSV data formats.
+
+**Official Resources:**
+- [NASA POWER Portal](https://power.larc.nasa.gov/)
+- [Daily API Documentation](https://power.larc.nasa.gov/docs/services/api/temporal/daily/)
+- [NASA POWER Parameter Dictionary](https://power.larc.nasa.gov/docs/tutorials/parameters/)
+
+### 2. ISRIC SoilGrids — Soil Data
+
+**Provider:** ISRIC – World Soil Information  
+**Dataset:** SoilGrids Global Soil Information  
+**Data Repository:** https://files.isric.org/soilgrids/latest/  
+**Official Website:** https://www.isric.org/explore/soilgrids
+
+AgriCycle uses soil-related data from **ISRIC SoilGrids**, a global soil information system that provides machine-learning-based predictions of soil properties.
+
+SoilGrids provides global soil property maps at approximately **250 m spatial resolution**, across six standard depth intervals. However, for simplicity we use 30-60 cm.
+
+Available soil properties include:
+
+- Soil pH
+- Soil organic carbon
+- Sand, silt, and clay content
+- Bulk density
+- Total nitrogen
+- Water retained at different pressure. (wv0010, wv0033, wv1500)
+
+**Data Preprocessing**
+
+Within AgriCycle's preprocessing pipeline, soil data is processed by:
+
+- Converting soil measurement (`Value`) and depth (`Depth`) columns into numeric formats.
+- Removing duplicate records.
+- Preparing the data for subsequent processing.
+
+**Data License:** Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+**Attribution:** SoilGrids data is provided by ISRIC – World Soil Information. Please refer to the official SoilGrids documentation and license for attribution requirements.
+
+### 3. NASA AppEEARS — MODIS Vegetation Data
+
+**API:** https://appeears.earthdatacloud.nasa.gov/api  
+**MODIS Product:** `MOD13Q1.061`  
+**End Date:** `2025-12-12`
+
+AgriCycle retrieves MODIS vegetation data through NASA AppEEARS, using the following layers:
+
+- `250m_16_days_NDVI` — Normalized Difference Vegetation Index
+- `250m_16_days_EVI` — Enhanced Vegetation Index
+- `250m_16_days_pixel_reliability` — Pixel reliability information
+- `250m_16_days_VI_Quality` — Vegetation Index quality information
+
+These datasets provide vegetation-index observations at 250 m resolution every 16 days, supporting vegetation monitoring and crop analysis.
+
+### 4. GeoJSON — Nepal Boundary Check
+
+**Data Source:** [World Countries GeoJSON](https://datahub.io/core/geo-boundaries-world-110m/_r/-/countries.geojson)
+
+AgriCycle uses GeoJSON country boundary data to perform a **Nepal boundary check**, verifying whether the user's geographic coordinates (latitude and longitude) fall within Nepal's national boundaries. This ensures location-based analysis is limited to the project's target country.
+
+### 5. Open-Meteo — Elevation and Terrain Classification
+
+**API:** https://api.open-meteo.com/v1/elevation
+
+AgriCycle uses the Open-Meteo Elevation API to retrieve elevation data for a given latitude and longitude and classify the terrain into three categories:
+
+| Elevation | Terrain |
+|---|---|
+| Below 1,000 m | Terai |
+| 1,000–1,999 m | Hill |
+| 2,000 m and above | Mountain |
+
+This classification helps identify the terrain category associated with a selected geographic location.
+
+### 6. Research Paper — Nepal Crop and Terrain Data
+
+**Source:** [Diversified Crop Rotation: An Approach for Sustainable Agriculture Production (2021)](https://onlinelibrary.wiley.com/doi/10.1155/2021/8924087)
+
+AgriCycle uses the crop rotation examples in Section 3 of this research paper as a reference to prepare a structured CSV dataset of crops and their corresponding terrain categories, such as **Terai, Hill, and Mountain**.
+
+This CSV serves as a reference for identifying crops suitable for different geographical regions of Nepal during crop selection and rotation planning.
+
+### 7. FAO — Nepal Crop Calendar Data
+
+**Source:** [FAO Crop Calendar](https://cropcalendar.review.fao.org/#/home)
+
+AgriCycle uses FAO's Crop Calendar platform to obtain available crop calendar information for Nepal, supporting crop planting and harvesting schedules and seasonal crop rotation planning.
+
+### 8. FAO — Approximate Crop Rooting Depths
+
+**Source:** [FAO — Annex 3: Rooting Depth](https://www.fao.org/4/y5749e/y5749e0j.htm)
+
+AgriCycle uses FAO reference data to obtain approximate rooting depths for different crops. These values help characterize crop root systems and support soil-water availability analysis.
+
+### 8. FAO EcoCrop — Crop pH Requirements
+
+**Source:** [FAO EcoCrop Crop Database](https://ecocrop.apps.fao.org/ecocrop/srv/en/cropFindForm)
+
+AgriCycle uses the FAO EcoCrop database to obtain the preferred soil pH ranges for different crops. This information helps assess whether the soil pH at a selected location is suitable for the corresponding crops during crop selection and rotation planning.
+
+### 9. YouTube — Crop Rotation Research and Brainstorming
+
+**Resource:** [Crop Rotation – YouTube Video](https://www.youtube.com/watch?v=ahfrgVNCUjc&list=PLPFdktLEPx4c&index=1)
+
+This video was used as an educational and brainstorming resource to understand crop rotation concepts and explore ideas for AgriCycle's crop rotation planning approach.
+
+## Technology stack
+
+| Category | Technology |
+|---|---|
+| Backend Framework | FastAPI |
+| Programming Language | Python |
+| Data Processing | Pandas |
+| Data Exploration and Prototyping | Jupyter Notebook |
+| API Architecture | REST API |
+| Version Control | Git and GitHub |
+
+## System Architecture
+
+AgriCycle follows a modular architecture consisting of three main components: Frontend, Backend, and Crop Rotation Engine.
+
+### 1. Backend — FastAPI
+
+The backend acts as the communication layer between the frontend and the crop rotation engine.
+
+Built using FastAPI, it is responsible for:
+- Exposing REST API endpoints.
+- Receiving and validating user requests.
+- Managing data access through repositories.
+- Invoking the crop rotation engine.
+- Returning structured recommendation results to the frontend.
+
+The engine contains the core logic responsible for generating, validating, scoring, and ranking crop rotation combinations.
+
+Its main modules include:
+
+- **Data Loader:** Loads crop, crop calendar, weather, and soil datasets.
+- **Preprocessing:** Cleans datasets, normalizes crop names, and prepares numerical and date values.
+- **Crop Selection:** Handles crop eligibility and selection criteria.
+- **Rotation Strategy:** Generates possible crop sequences based on crop durations and growing-season constraints.
+- **Rotation Validator:** Checks crop sequences against rotation constraints.
+- **Scoring:** Calculates weighted scores based on farmer priorities, including profitability, food security, soil health, water saving, and low risk.
+- **Top-K Selector:** Returns the highest-ranked crop rotation recommendations.
+
+### Architecture Workflow
+
+1. The farmer provides location details and farming preferences through the frontend.
+2. The frontend sends the request to the FastAPI backend.
+3. The backend validates the request and accesses the required data.
+4. The crop rotation engine processes the available data and generates candidate rotations.
+5. Invalid rotations are filtered out.
+6. Valid rotations are scored according to farmer priorities.
+7. The Top-K selector identifies the highest-ranked rotations.
+8. The backend returns the results to the frontend for presentation.
+
+## Installation & Setup
+
+Follow these steps to run AgriCycle locally.
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/your-username/AgriCycle.git
+cd AgriCycle
+```
+
+### Install project dependencies and create the virtual environment
+
+```
+uv sync
+```
+
+### Point the cd to main.py
+
+```
+uv run fastapi dev main.py
+```
+
+### API access should be under these endpoint.
+```
+API: http://127.0.0.1:8000
+Swagger UI: http://127.0.0.1:8000/docs
+ReDoc: http://127.0.0.1:8000/redoc
+```
+
+## API Documentation
+
+AgriCycle provides REST API endpoints built with **FastAPI** to support location-based crop rotation recommendations.
+
+### Available Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/rotations/recommend` | Submit a location and initiate a crop rotation recommendation job. |
+| GET | `/rotations/{recommendation_id}` | Retrieve recommendation job status, data-source statuses, and generated recommendations. |
+| GET | `/rotations/` | Retrieve paginated recommendation jobs and their results. |
+| GET | `/health/` | Check whether the API is running. |
+| GET | `/` | Root endpoint. |
+
+### 1. Submit Crop Rotation Recommendation
+
+**Endpoint:** `POST /rotations/recommend`
+
+Accepts geographical coordinates, validates the request, creates a recommendation job, and schedules external data retrieval in the background.
+
+**Request Body:**
+
+\`\`\`json
+{
+  "latitude": 27.7172,
+  "longitude": 85.3240
+}
+\`\`\`
+
+**Optional Query Parameter:**
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `d_recommendation_id` | UUID | No | Optional recommendation identifier. |
+
+**Response:** `202 Accepted`
+
+### 2. Get Recommendation Status
+
+**Endpoint:** `GET /rotations/{recommendation_id}`
+
+Retrieves:
+- Recommendation job status.
+- External data-source retrieval statuses.
+- Generated crop rotation recommendations.
+
+**Path Parameter:**
+
+| Parameter | Type | Required |
+|---|---|---|
+| `recommendation_id` | String | Yes |
+
+**Response:** `200 OK`
+
+### 3. Get All Recommendation Jobs
+
+**Endpoint:** `GET /rotations/`
+
+Returns paginated recommendation jobs and their results.
+
+**Query Parameters:**
+
+| Parameter | Type | Default | Constraints |
+|---|---|---|---|
+| `page` | Integer | 1 | Minimum: 1 |
+| `limit` | Integer | 10 | 1–100 |
+
+**Response:** `200 OK`
+
+### 4. Health Check
+
+**Endpoint:** `GET /health/`
+
+Checks whether the AgriCycle API is running.
+
+**Response:** `200 OK`
+
+### 5. Root Endpoint
+
+**Endpoint:** `GET /`
+
+Provides the root API endpoint.
+
+**Response:** `200 OK`
+
+### Interactive API Documentation
+
+AgriCycle uses FastAPI's automatically generated API documentation.
+
+Once the backend is running, access:
+
+- **Swagger UI:** http://127.0.0.1:8000/docs
+- **ReDoc:** http://127.0.0.1:8000/redoc
+- **OpenAPI Schema:** http://127.0.0.1:8000/openapi.json
+
+### Validation Errors
+
+The API returns `422 Unprocessable Entity` when request parameters or request-body data fail validation.
+
+## Example Usage
+
+AgriCycle generates crop rotation recommendations based on geographical location and available agricultural data.
+
+### 1. Submit a Recommendation Request
+
+Send a POST request with the selected location's latitude and longitude.
+
+**Request:**
+
+```bash
+curl -X POST "http://127.0.0.1:8000/rotations/recommend" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "latitude": 27.676546,
+    "longitude": 84.463889
+  }'
+```
+
+**Response**
+
+```bash
+{
+  "status": "accepted",
+  "message": "Recommendation request accepted for processing.",
+  "recommendation_id": "bd1b15f2-1358-43f6-b0f3-99a9cb0d6180",
+  "job_status": "PENDING"
+}
+```
+
+### 2. Retrieve Recommendation Results
+
+Send a GET request with the recommendation_id.
+
+**Request:**
+
+```bash
+curl -X 'GET' \
+  'http://localhost:8000/rotations/6d333e32-b44a-4b8a-8366-13b76e284389' \
+  -H 'accept: */*'
+```
+
+**Response**
+
+```bash
+{
+  "recommendation_id": "6d333e32-b44a-4b8a-8366-13b76e284389",
+  "status": "COMPLETED",
+  "location": {
+    "latitude": 27.676546,
+    "longitude": 84.463889
+  },
+  "data_sources": {
+    "ELEVATION": {
+      "status": "SUCCESS",
+      "error_message": null,
+      "data_available": true
+    },
+    "MODIS": {
+      "status": "SUCCESS",
+      "error_message": null,
+      "data_available": true
+    },
+    "NASA_POWER": {
+      "status": "SUCCESS",
+      "error_message": null,
+      "data_available": true
+    },
+    "SOILGRIDS": {
+      "status": "SUCCESS",
+      "error_message": null,
+      "data_available": true
+    }
+  },
+  "error_message": null,
+  "created_at": "2026-11-15T11:20:51.356279",
+  "updated_at": "2026-11-15T14:28:27.224742",
+  "results": [
+    {
+      "rank": 1,
+      "score": 0.771,
+      "sequence": "Rice > Mungbean > Mustard",
+      "rotation_data": {
+        "rank": 1,
+        "sequence": "Rice > Mungbean > Mustard",
+        "score": 0.771,
+        "soil_fit": 0.97,
+        "water_fit": 0.42,
+        "timing": 0.89,
+        "rotation_health": 0.8,
+        "ndvi_support": 0.86,
+        "profit": 1,
+        "food": 0.67,
+        "total_days": 303,
+        "fallow_days": 13,
+        "warnings": "",
+        "events": [
+          {
+            "crop": "Rice",
+            "sow": "2026-03-01",
+            "harvest": "2026-06-29",
+            "fallow_d": 0,
+            "calendar_idx": 272,
+            "water_ratio": 0.21174176892013427,
+            "demand_mm": 2155.0609014678575,
+            "water_mode": "water_balance",
+            "ndvi": 0.6619216977083321
+          },
+          {
+            "crop": "Mungbean",
+            "sow": "2026-07-09",
+            "harvest": "2026-09-22",
+            "fallow_d": 0,
+            "calendar_idx": 40,
+            "water_ratio": 0.8393062441474067,
+            "demand_mm": 931.8622386159477,
+            "water_mode": "water_balance",
+            "ndvi": 0.8656706777778406
+          },
+          {
+            "crop": "Mustard",
+            "sow": "2026-10-15",
+            "harvest": "2026-12-29",
+            "fallow_d": 13,
+            "calendar_idx": 197,
+            "water_ratio": 0.20406136567726965,
+            "demand_mm": 716.3624615422256,
+            "water_mode": "water_balance",
+            "ndvi": 0.7726505722506893
+          }
+        ]
+    }
+```
+
+### 3. Retreive all Recommendation jobs
+
+Return paginated recommendation jobs and their results.
+
+**Request:**
+
+```bash
+curl -X 'GET' \
+  'http://localhost:8000/rotations/?page=1&limit=2' \
+  -H 'accept: */*'
+```
+
+**Response**
+
+```bash
+{
+  "total": 5,
+  "page": 1,
+  "limit": 2,
+  "total_pages": 3,
+  "returned": 2,
+  "recommendations": [
+    {
+      "recommendation_id": "bd1b15f2-1358-43f6-b0f3-99a9cb0d6180",
+      "status": "PENDING",
+      "location": {
+        "latitude": 27.676546,
+        "longitude": 84.463889
+      },
+      "created_at": "2026-11-15T17:04:32.164942",
+      "updated_at": "2026-11-15T17:04:32.164947",
+      "error_message": null,
+      "data_sources": {
+        "ELEVATION": {
+          "status": "PENDING",
+          "data_available": false,
+          "error_message": null
+        },
+        "MODIS": {
+          "status": "PENDING",
+          "data_available": false,
+          "error_message": null
+        },
+        "NASA_POWER": {
+          "status": "PENDING",
+          "data_available": false,
+          "error_message": null
+        },
+        "SOILGRIDS": {
+          "status": "PENDING",
+          "data_available": false,
+          "error_message": null
+        }
+      }
+    },
+    {
+      "recommendation_id": "6d333e32-b44a-4b8a-8366-13b76e284389",
+      "status": "COMPLETED",
+      "location": {
+        "latitude": 27.676546,
+        "longitude": 84.463889
+      },
+      "created_at": "2026-11-15T11:20:51.356279",
+      "updated_at": "2026-11-15T14:28:27.224742",
+      "error_message": null,
+      "data_sources": {
+        "ELEVATION": {
+          "status": "SUCCESS",
+          "data_available": true,
+          "error_message": null
+        },
+        "MODIS": {
+          "status": "SUCCESS",
+          "data_available": true,
+          "error_message": null
+        },
+        "NASA_POWER": {
+          "status": "SUCCESS",
+          "data_available": true,
+          "error_message": null
+        },
+        "SOILGRIDS": {
+          "status": "SUCCESS",
+          "data_available": true,
+          "error_message": null
+        }
+      }
+    }
+  ]
+}
+```
+
+## Project Structure
+
+AgriCycle is organized into separate modules to keep the API, recommendation engine, data access, and configuration easy to maintain.
+
+```text
+backend/
+│
+├── src/
+│   ├── main.py                 # FastAPI application entry point
+│   ├── core/                 # API endpoints
+│   │   ├── config.py           # Application configuration    
+│   │
+│   ├── api/  
+│   │   └── routes.py            # API endpoints 
+│   │       ├── health.py         
+│   │       ├── rotations.py    
+│   │
+│   ├── database/                # sqlite connection
+│   │   ├── health.py         
+│   │   ├── rotations.py    
+│   │
+│   ├── repositories/            # Data access and retrieval
+│   │   └── crop_repository.py
+│   │
+│   └── engine/                 # Crop rotation recommendation logic
+│       ├── config.py
+│       ├── data_loader.py
+│       ├── farmer_priorities.py
+│       ├── field_profile.py
+│       ├── rotation_strategy.py
+│       ├── preprocessing.py
+│       ├── rotation_strategy.py
+│       └── site.py
+│
+├── data/                       # Agricultural datasets
+├── notebooks/                  # Data exploration and experiments
+│
+├── .env.example                # Example environment variables
+│   # outtside the root folder
+├── pyproject.toml              # Project dependencies and settings
+├── uv.lock                     # Locked dependency versions
+└── README.md                   # Project documentation
+```
+
+## Limitations & Future Improvements
+
+### Current Limitations
+
+- **Geographical Focus:** AgriCycle is currently designed for Nepal. Its crop datasets, terrain classifications, and agricultural references are based on Nepalese farming conditions. Although some of these crops may also be cultivated in other countries, the recommendations have not been validated for those regions. Applying AgriCycle elsewhere would require adapting its crop database, local growing calendars, climate and soil information, and regional agricultural requirements.
+
+- **Limited Recommendation Factors:** The current rotation-generation process primarily considers crop growing durations and growing-season constraints. More environmental and agricultural factors need to be integrated into the recommendation process.
+
+- **Weather and Soil Integration:** Weather and soil datasets are collected and preprocessed, but their full integration into crop rotation scoring and selection is still a work in progress.
+
+- **Scoring Accuracy:** The recommendation system uses weighted criteria such as profitability, food security, soil health, water conservation, and risk. The current scoring system depends on supplied criterion scores and does not independently calculate actual farm profitability, crop yield, or resource consumption.
+
+- **Data Availability and Accuracy:** External datasets may have different spatial resolutions, update frequencies, and levels of accuracy. Regional estimates may not fully represent conditions on an individual farm.
+
+- **Frontend Development:** The user interface is still under development. The backend recommendation API is operational, but the complete farmer-facing experience is not yet finished.
+
+### Future Improvements
+
+- **Expand Geographical Coverage:** Extend AgriCycle to other countries and regions by incorporating local crop varieties, agricultural calendars, climate conditions, soil characteristics, and farming practices.
+
+- **Improve Crop Suitability Assessment:** Integrate location-specific climate, elevation, soil properties, and crop requirements into crop selection.
+
+- **Enhance Recommendation Scoring:** Develop more reliable scoring models using agricultural research, field data, and expert-validated criteria.
+
+- **Economic Analysis:** Incorporate crop yields, market prices, production costs, and profitability estimates.
+
+- **Water and Soil Assessment:** Improve water availability and soil health analysis to support more sustainable crop rotation planning.
+
+- **Expand Agricultural Datasets:** Include more crop varieties and region-specific agricultural information.
+
+- **Complete the Frontend:** Develop interactive maps, recommendation dashboards, and crop rotation comparisons to improve the farmer experience.
+
+- **Real-World Validation:** Collaborate with agricultural experts and farmers to evaluate and improve the recommendations using real-world farming data.
+
+### Long-Term Vision
+
+Our goal is to develop AgriCycle into a reliable, location-aware crop rotation planning tool that helps farmers explore suitable crop combinations and make more informed, sustainable farming decisions.
+
+## Team & Acknowledgements
+
+### Our Team
+
+AgriCycle was developed by a team participating in the **NASA Space Apps Challenge 2026**.
+
+| Team Member | Role | Contributions |
+|---|---|---|
+| Pujan Thing | Team lead | Full-stack |
+| Suyog Giri | Frontend | UI/UX |
+
+### Acknowledgements
+
+We would like to thank the following organizations and resources for providing valuable data, research, and tools that contributed to the development of AgriCycle.
+
+- **NASA POWER:** Meteorological and solar data.
+- **NASA AppEEARS / MODIS:** Satellite-derived vegetation indices.
+- **ISRIC SoilGrids:** Global soil property data.
+- **Open-Meteo:** Elevation data.
+- **FAO:** Crop calendar, crop characteristics, and rooting depth references.
+- **FAO EcoCrop:** Crop soil pH requirement information.
+- **World Countries GeoJSON:** Geographic boundary data used for Nepal location validation.
+- **Research Publications:** Agricultural research used as a reference for Nepalese crop rotation and terrain information.
+
+We also acknowledge the open-source community and the developers of the tools and libraries that made this project possible.
+
+### Special Thanks
+
+We appreciate the NASA Space Apps Challenge for providing an opportunity to explore real-world challenges through innovation, collaboration, and the use of open data.
+
+## References & Licensing
+
+AgriCycle uses publicly available datasets, APIs, research publications, and open-source resources. We acknowledge the original providers and their respective licensing terms.
+
+| Source | Resource | License / Attribution |
+|---|---|---|
+| NASA POWER | Meteorological and solar data | NASA data usage and attribution guidelines |
+| NASA AppEEARS / MODIS | Vegetation indices | NASA LP DAAC data use and citation guidelines |
+| ISRIC SoilGrids | Soil property data | CC BY 4.0 |
+| Open-Meteo | Elevation data | Open-Meteo terms of use |
+| FAO | Crop calendar and agricultural references | Refer to individual FAO resource terms |
+| FAO EcoCrop | Crop characteristics and pH requirements | Refer to FAO database terms |
+| World Countries GeoJSON | Country boundary data | Refer to the source repository license |
+| Research Publications | Nepal crop rotation references | Cite the original publications |
+
+### Important Notice
+
+- All external datasets and resources remain subject to their respective licenses and terms of use.
+- Appropriate attribution should be given to the original data providers.
+- AgriCycle is an independent project developed for the NASA Space Apps Challenge 2026.
+- AgriCycle is not an official NASA product and is not endorsed by NASA.
