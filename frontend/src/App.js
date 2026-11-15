@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SimulationSetup from "./SimulationSetup.jsx";
 import "./Dashboard.css";
 
@@ -11,6 +11,36 @@ const plans = [
 export default function App() {
   const [screen, setScreen] = useState("map");
   const [settings, setSettings] = useState(null);
+  const [point, setPoint] = useState(null);
+  const mapFrame = useRef(null);
+
+  useEffect(() => {
+    function receiveMapPoint(event) {
+      if (
+        event.origin !== window.location.origin ||
+        event.source !== mapFrame.current?.contentWindow
+      )
+        return;
+
+      const { type, district, latitude, longitude } = event.data ?? {};
+      if (
+        type !== "project-nepal:point-selected" ||
+        typeof district !== "string" ||
+        !district.trim() ||
+        !Number.isFinite(latitude) ||
+        Math.abs(latitude) > 90 ||
+        !Number.isFinite(longitude) ||
+        Math.abs(longitude) > 180
+      )
+        return;
+
+      setPoint({ district, latitude, longitude });
+      setScreen("setup");
+    }
+
+    window.addEventListener("message", receiveMapPoint);
+    return () => window.removeEventListener("message", receiveMapPoint);
+  }, []);
 
   function showCropPlans(selectedSettings) {
     setSettings(selectedSettings);
@@ -18,7 +48,13 @@ export default function App() {
   }
 
   if (screen === "setup") {
-    return <SimulationSetup onStart={showCropPlans} />;
+    return (
+      <SimulationSetup
+        point={point}
+        onStart={showCropPlans}
+        onBack={() => setScreen("map")}
+      />
+    );
   }
 
   const highlightedPlan =
@@ -31,7 +67,9 @@ export default function App() {
       <div className="nepal-layout">
         <nav className="nepal-nav" aria-label="Dashboard">
           <button onClick={() => setScreen("map")}>Map</button>
-          <button onClick={() => setScreen("setup")}>Farm setup</button>
+          <button disabled={!point} onClick={() => setScreen("setup")}>
+            Farm setup
+          </button>
           <button disabled={!settings} onClick={() => setScreen("results")}>
             Crop plans
           </button>
@@ -40,20 +78,25 @@ export default function App() {
         <main className="nepal-content">
           {screen === "map" ? (
             <>
-              <p className="nepal-banner">Select a farming area on the map</p>
+              <p className="nepal-banner">
+                Click a point on the map to select your farming location
+              </p>
               <div className="nepal-map">
-              <iframe
-              src="/project-nepal.html?v=2"
-              title="Interactive Nepal district map"
-              style={{ width: "100%", height: "680px", border: 0 }}
-              />
+                <iframe
+                  ref={mapFrame}
+                  src="/project-nepal.html?mode=simulation"
+                  title="Interactive Nepal district map"
+                  style={{ width: "100%", height: "680px", border: 0 }}
+                />
               </div>
             </>
           ) : (
             <>
               <h1>Compare crop plans</h1>
               <p className="nepal-banner">
-                Melamchi, Sindhupalchok · {settings.priority}
+                {settings.location} · {settings.priority}
+                {" · "}
+                {settings.latitude.toFixed(5)}, {settings.longitude.toFixed(5)}
               </p>
               <p>Demo crop sequences for comparison.</p>
 
@@ -71,7 +114,9 @@ export default function App() {
                     {plans.map(([name, first, second, third]) => (
                       <tr
                         key={name}
-                        className={name === highlightedPlan ? "nepal-highlight" : ""}
+                        className={
+                          name === highlightedPlan ? "nepal-highlight" : ""
+                        }
                       >
                         <th scope="row">{name}</th>
                         <td>{first}</td>
@@ -83,7 +128,10 @@ export default function App() {
                 </table>
               </div>
 
-              <p>Highlighted for your selected priority: <strong>{highlightedPlan}</strong></p>
+              <p>
+                Highlighted for your selected priority:{" "}
+                <strong>{highlightedPlan}</strong>
+              </p>
             </>
           )}
         </main>
