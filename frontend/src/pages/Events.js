@@ -60,12 +60,10 @@ export default function Events() {
                 {done ? (
                   <>
                     <button className="btn" onClick={() => navigate(`/events/${r.recommendation_id}`)}>View</button>
-                    <button className="btn danger" onClick={() => remove(r.recommendation_id)}>Delete</button>
                   </>
                 ) : failed ? (
                   <>
                     <span className="badge fail">{r.status}</span>
-                    <button className="btn danger" onClick={() => remove(r.recommendation_id)}>Delete</button>
                   </>
                 ) : (
                   <span className="badge proc">Processing…</span>

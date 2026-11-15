@@ -1,7 +1,7 @@
 # AgriCycle 🌱
 ### Smart Crop Rotation Planning
 
-AgriCycle is a data-driven crop rotation planning application designed to help farmers explore and identify suitable crop sequences within a given growing season.
+AgriCycle is a data-driven crop rotation planning application designed to help farmers explore and identify suitable crop sequences within a given growing season. AgriCycle is currently focused on Nepal. Due to the time constraints of the NASA Space Apps Challenge, we intentionally limited the initial geographical scope rather than attempting to develop a solution for multiple countries without sufficient regional data and validation.
 
 The application generates possible crop rotation combinations, evaluates them against growing-season constraints, and ranks the valid combinations based on configurable farming priorities.
 
@@ -15,7 +15,7 @@ AgriCycle considers multiple decision-making criteria, including:
 
 By combining crop characteristics, growing durations, rotation constraints and farmer-defined priorities, AgriCycle aims to make crop rotation planning more structured, transparent and accessible.
 
-The goal is to support informed agricultural planning and encourage more sustainable farming decisions through data-driven recommendations.
+The goal is to support informed agricultural planning and encourage more sustainable farming decisions through data-driven recommendations. AgriCycle is a decision-support tool, not a replacement for farmers, agricultural experts, or traditional farming knowledge. Final farming decisions remain with the farmers, who can consider local experience, practical circumstances, and expert advice alongside the recommendations.
 
 ## Problem Statement
 
@@ -114,7 +114,7 @@ By combining crop rotation generation, constraint validation, multi-criteria sco
 - Supports structured input and output.
 - Separates API functionality from the underlying recommendation engine.
 
-### 7. Frontend (In Development)
+### 7. Frontend
 - Farmer-friendly crop rotation configuration.
 - Interactive recommendation dashboard.
 - Comparison of recommended crop sequences.
@@ -285,16 +285,27 @@ AgriCycle uses the FAO EcoCrop database to obtain the preferred soil pH ranges f
 
 This video was used as an educational and brainstorming resource to understand crop rotation concepts and explore ideas for AgriCycle's crop rotation planning approach.
 
+### 10. Leaflet & OpenStreetMap — Interactive Maps and Location Selection
+
+**Source:** [Leaflet](https://leafletjs.com/) | [OpenStreetMap](https://www.openstreetmap.org/)
+
+AgriCycle uses the Leaflet JavaScript library to display interactive maps powered by OpenStreetMap data. This allows users to explore geographical locations, select a location on the map, and obtain its latitude and longitude coordinates for location-based agricultural analysis.
+
+**Attribution:** © [OpenStreetMap contributors](https://www.openstreetmap.org/copyright).
+
 ## Technology stack
 
 | Category | Technology |
 |---|---|
 | Backend Framework | FastAPI |
+| Frontend Framework | React |
 | Programming Language | Python |
-| Data Processing | Pandas |
+| Data Processing | Pandas, numpy, rasterio, geopandas |
 | Data Exploration and Prototyping | Jupyter Notebook |
 | API Architecture | REST API |
 | Version Control | Git and GitHub |
+| Interactive Maps | Leaflet |
+| Map Data | OpenStreetMap |
 
 ## System Architecture
 
@@ -323,7 +334,45 @@ Its main modules include:
 - **Scoring:** Calculates weighted scores based on farmer priorities, including profitability, food security, soil health, water saving, and low risk.
 - **Top-K Selector:** Returns the highest-ranked crop rotation recommendations.
 
-### Architecture Workflow
+### 2. Frontend — React
+
+The frontend acts as the user-facing interface of AgriCycle, allowing farmers to interact with the crop rotation planning system, provide location and farming preferences, and explore the generated crop rotation recommendations.
+
+Built using **React.js and JavaScript**, the frontend is designed to provide a simple, accessible, and interactive experience for farmers.
+
+Its main responsibilities include:
+
+- Providing an interface for farmers to configure crop rotation planning parameters.
+- Allowing users to select geographical locations through an interactive map.
+- Collecting location details and farmer-defined farming priorities.
+- Communicating with the FastAPI backend through REST API requests.
+- Displaying recommendation job statuses and data-source retrieval progress.
+- Presenting ranked crop rotation recommendations returned by the backend.
+- Allowing users to compare alternative crop rotation sequences and their evaluation scores.
+
+The frontend uses the following technologies:
+
+- **React.js:** Builds the user interface using reusable components.
+- **JavaScript:** Handles application logic and user interactions.
+- **React DOM:** Renders React components into the web application.
+- **React Router DOM:** Manages application navigation and routing.
+- **Leaflet:** Provides interactive map functionality for geographical location selection.
+- **React Leaflet:** Integrates Leaflet maps and map components into the React application.
+- **React Scripts:** Provides development and build tooling for the React application.
+
+### Frontend Workflow
+
+1. The farmer opens the AgriCycle web application.
+2. The farmer selects a geographical location using the interactive map.
+3. The farmer provides the required farming parameters and preference weights.
+4. The frontend sends the recommendation request to the FastAPI backend.
+5. The frontend displays the recommendation job status while the backend processes the request.
+6. Once processing is complete, the frontend retrieves the generated recommendations.
+7. The farmer explores and compares the ranked crop rotation alternatives.
+
+**Development Status:** The frontend is currently under development. The technologies and workflow described above represent the frontend architecture and intended user experience; not all planned interface features are necessarily implemented yet.
+
+### 3. Architecture Workflow
 
 1. The farmer provides location details and farming preferences through the frontend.
 2. The frontend sends the request to the FastAPI backend.
@@ -733,6 +782,28 @@ backend/
 └── README.md                   # Project documentation
 ```
 
+```
+frontend/
+│
+├── public/                     # Static assets and public files
+│
+├── src/
+│   ├── components/             # Reusable UI components
+│   │
+│   ├── pages/                  # Application pages
+│   │
+│   ├── api.js                  # API requests to the FastAPI backend
+│   │
+│   ├── constants.js            # Farmer priorities, input defaults,
+│   │
+│   ├── App.js                  # Main application component
+│   └── index.js                # Frontend entry point
+│
+├── .env.example                # Example environment variables
+├── package.json                # Frontend dependencies and scripts
+└── README.md                   # Frontend documentation
+```
+
 ## Limitations & Future Improvements
 
 ### Current Limitations
@@ -763,7 +834,9 @@ backend/
 
 - **Expand Agricultural Datasets:** Include more crop varieties and region-specific agricultural information.
 
-- **Complete the Frontend:** Develop interactive maps, recommendation dashboards, and crop rotation comparisons to improve the farmer experience.
+- **Complete and Enhance the Frontend:** Develop interactive maps, recommendation dashboards, and crop rotation comparisons to improve the farmer experience.
+
+- **Interactive Crop Rotation Visualization:** Introduce visual timelines and interactive diagrams to help farmers understand crop sequences, growing periods, harvest dates, fallow intervals, and transitions between crops. Allow users to explore and compare different rotation alternatives more intuitively.
 
 - **Real-World Validation:** Collaborate with agricultural experts and farmers to evaluate and improve the recommendations using real-world farming data.
 
@@ -794,6 +867,8 @@ We would like to thank the following organizations and resources for providing v
 - **FAO EcoCrop:** Crop soil pH requirement information.
 - **World Countries GeoJSON:** Geographic boundary data used for Nepal location validation.
 - **Research Publications:** Agricultural research used as a reference for Nepalese crop rotation and terrain information.
+- **Leaflet:** JavaScript library used to display interactive maps and support geographic coordinate selection. Licensed under the BSD 2-Clause License.
+- **OpenStreetMap Contributors:** Map data used in the frontend for displaying geographic locations and selecting coordinates. Licensed under the Open Database License (ODbL).
 
 We also acknowledge the open-source community and the developers of the tools and libraries that made this project possible.
 
@@ -815,6 +890,8 @@ AgriCycle uses publicly available datasets, APIs, research publications, and ope
 | FAO EcoCrop | Crop characteristics and pH requirements | Refer to FAO database terms |
 | World Countries GeoJSON | Country boundary data | Refer to the source repository license |
 | Research Publications | Nepal crop rotation references | Cite the original publications |
+| Leaflet | Interactive mapping library | BSD 2-Clause License |
+| OpenStreetMap | Map data and map tiles | Open Database License (ODbL) |
 
 ### Important Notice
 

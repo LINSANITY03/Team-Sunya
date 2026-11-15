@@ -15,6 +15,9 @@ class FieldProfile:
     start_date: dt.date = dt.date(2026, 11, 1)
 
     def __post_init__(self):
+        if not isinstance(self.field_id, str) or not self.field_id.strip():
+            raise ValueError("field_id must be a non-empty string.")
+        
         if self.terrain not in self._VALID_TERRAINS:
             raise ValueError(
                     f"Invalid terrain: {self.terrain}."
