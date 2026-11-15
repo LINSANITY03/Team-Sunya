@@ -44,18 +44,18 @@ class FarmerPriority():
             "low_risk": self.low_risk
         }
         for name, value in _preferences.items():
+            if isinstance(value, bool) or not isinstance(value, (int, float)):
+                raise TypeError(
+                    f"Priority '{name}' must be numeric."
+                )
+            
             if not (0 <= value <= 1):
                 raise ValueError(
                     f"{name} must be between 0 and 1. Got {value}"
                 )
-            
-            if round(value, 1) != value:
-                raise ValueError(
-                    f"{name} must have at most 1 decimal place (e.g., 0.5, 0.6). Got {self._count_decimals(value)}"
-                )
 
-        if not (0 <= self.min_food_share <= 1 ) or (round(self.min_food_share, 2) != self.min_food_share):
+        if not (0 <= self.min_food_share <= 1 ):
             raise ValueError(
-                f"min_food_share must be between 0 and 1 with at most 2 decimal place. "
+                f"min_food_share must be between 0 and 1 "
                 f"Got {self.min_food_share}"
             )

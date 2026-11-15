@@ -4,7 +4,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 from uuid import UUID
 
-from database.models import RecommendationData, RecommendationJob, CropRotationRecommendation
+from schema import RecommendationRequest
+from database.models import RecommendationData, RecommendationJob
 from database.connection import get_db
 
 from services.location_service import is_inside_nepal
@@ -23,7 +24,7 @@ router = APIRouter(prefix="/rotations", tags=["Rotations"])
 
 @router.post("/recommend", status_code=status.HTTP_202_ACCEPTED,)
 def recommend_rotations(
-    location: Location,
+    request: RecommendationRequest,
     background_tasks: BackgroundTasks,
     d_recommendation_id: UUID | None = None, 
     db: Session = Depends(get_db),
@@ -32,6 +33,18 @@ def recommend_rotations(
         Validate coordinates, create a recommendation job,
         and schedule external data retrieval in the background.
     """
+
+    latitude = request.latitude
+    longitude = request.longitude
+
+    # 1. Validate Nepal boundary
+    if not is_inside_nepal(latitude, longitude):
+        raise HTTPException(
+            status_code=400,
+            detail="The selected location is outside Nepal."
+        )
+
+    request_data = request.model_dump(mode="json")
 
     if d_recommendation_id:
         data_recommendation_id = str(d_recommendation_id)
@@ -44,27 +57,18 @@ def recommend_rotations(
             process_recommendation_job,
             data_recommendation_id,
         )
+
         return {
             "status": "accepted",
             "message": "Recommendation request accepted for processing.",
             "recommendation_id": data_recommendation_id,
         }
 
-    latitude = location.latitude
-    longitude = location.longitude
-
-    # 1. Validate Nepal boundary
-    if not is_inside_nepal(latitude, longitude):
-        raise HTTPException(
-            status_code=400,
-            detail="The selected location is outside Nepal."
-        )
-
     # 2. Create recommendation job.
     job = RecommendationJob(
         latitude=latitude,
         longitude=longitude,
-        request_data=location.model_dump(),
+        request_data=request_data,
         status="PENDING",
     )
 
@@ -99,7 +103,7 @@ def recommend_rotations(
     # 5. Schedule background processing.
     background_tasks.add_task(
         process_recommendation_job,
-        recommendation_id,
+        recommendation_id
     )
 
     # 6. Return immediately.
@@ -109,6 +113,7 @@ def recommend_rotations(
         "recommendation_id": recommendation_id,
         "job_status": job.status,
     }
+
 
 @router.get(
     "/{recommendation_id}",

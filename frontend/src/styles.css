@@ -13,11 +13,25 @@ body { margin: 0; font-family: system-ui, sans-serif; color: #1f2937; background
 .map-wrap { position: absolute; inset: 0; }
 .hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: #fff; padding: 8px 14px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.2); z-index: 500; font-size: 14px; }
 
-.sheet { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: #fff; border-radius: 16px 16px 0 0; box-shadow: 0 -4px 16px rgba(0,0,0,.2); transform: translateY(105%); transition: transform .35s ease; z-index: 1000; display: flex; flex-direction: column; }
+.sheet { position: absolute; inset: 0; height: 100%; background: #f8fafc; border-radius: 0; transform: translateY(100%); transition: transform .35s ease; z-index: 1000; display: flex; flex-direction: column; }
 .sheet.open { transform: translateY(0); }
-.sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid #e5e7eb; }
-.sheet-scroll { flex: 1; overflow-y: auto; padding: 16px 20px; display: grid; gap: 14px; }
-.sheet-foot { padding: 12px 20px; border-top: 1px solid #e5e7eb; }
+.sheet-head { background: #fff; }
+.sheet-scroll {
+    flex: 1;
+    min-height: 0;            /* lets a flex child scroll instead of growing */
+    overflow-y: auto;
+    padding: 16px 20px 40px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    gap: 14px;
+    align-content: start;     /* stops grid rows stretching to fill the height */
+    scroll-behavior: smooth;
+  }
+.sheet-foot { background: #fff; }
+.sheet-foot > * { max-width: 900px; margin-left: auto; margin-right: auto; }
+.section { background: #fff; }
 
 .field { display: grid; gap: 4px; font-size: 14px; }
 .field input, .field select { padding: 9px 10px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 14px; }
@@ -56,3 +70,9 @@ body { margin: 0; font-family: system-ui, sans-serif; color: #1f2937; background
 .scroll-x { overflow-x: auto; margin-top: 12px; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #f3f4f6; white-space: nowrap; }
+.slider { display: grid; gap: 4px; font-size: 14px; }
+.slider-top { display: flex; justify-content: space-between; }
+.slider input[type="range"] { width: 100%; accent-color: #b45309; }
+.adv-toggle { background: none; border: 1px dashed #d1d5db; border-radius: 10px; padding: 10px 14px; text-align: left; font-size: 14px; font-weight: 600; color: #92400e; cursor: pointer; }
+.adv-toggle:hover { background: #fffbeb; }
+.adv-wrap { display: grid; gap: 14px; scroll-margin-top: 8px; }

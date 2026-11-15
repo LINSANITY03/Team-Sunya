@@ -14,7 +14,7 @@ async function request(path, options = {}) {
 }
 
 export const createRecommendation = (payload) =>
-  request("/rotations/", { method: "POST", body: JSON.stringify(payload) });
+  request("/rotations/recommend", { method: "POST", body: JSON.stringify(payload) });
 
 export const listRotations = (page = 1, limit = 10) =>
   request(`/rotations/?page=${page}&limit=${limit}`);
