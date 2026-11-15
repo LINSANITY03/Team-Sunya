@@ -5,6 +5,7 @@ from api.routes.health import router as health_router
 from api.routes.rotations import router as recommendation_router
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from core.logging import setup_logging
 from database.connection import init_db
@@ -27,6 +28,20 @@ app = FastAPI(
     version="1.0.0",
     description="Crop Rotation Recommendation API",
     lifespan=lifespan,
+)
+
+origins = [
+    "http://localhost",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # API routes.

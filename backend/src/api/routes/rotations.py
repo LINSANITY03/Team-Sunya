@@ -261,34 +261,6 @@ def get_all_recommendation_jobs(
         if job.status == "COMPLETED"
     ]
 
-    rotations_by_job = {}
-    
-    if completed_job_ids:
-        rotation_rows = (
-            db.query(CropRotationRecommendation)
-            .filter(
-                CropRotationRecommendation.recommendation_id.in_(
-                    completed_job_ids
-                )
-            )
-            .order_by(
-                CropRotationRecommendation.recommendation_id,
-                CropRotationRecommendation.rank,
-            )
-            .all()
-        )
-
-        # Group rotations by recommendation ID.
-        for rotation in rotation_rows:
-            rotations_by_job.setdefault(
-                rotation.recommendation_id, []
-            ).append({
-                "rank": rotation.rank,
-                "score": rotation.score,
-                "sequence": rotation.sequence,
-                "rotation_data": rotation.rotation_data,
-            })
-
     recommendations = []
 
     for job in jobs:
@@ -303,7 +275,6 @@ def get_all_recommendation_jobs(
             "updated_at": job.updated_at,
             "error_message": job.error_message,
             "data_sources": sources_by_job.get(job.id, {}),
-            "results": rotations_by_job.get(job.id, []),
         })
 
     return {
