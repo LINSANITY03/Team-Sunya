@@ -3,7 +3,7 @@ import React from "react";
 export default function Navbar() {
   return (
     <header className="navbar">
-      <h1>Team Sunya</h1>
+      <h1>AgriCycle 🌱</h1>
     </header>
   );
 }

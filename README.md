@@ -390,8 +390,8 @@ Follow these steps to run AgriCycle locally.
 ### Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/AgriCycle.git
-cd AgriCycle
+git clone https://github.com/LINSANITY03/Team-Sunya
+cd backend
 ```
 
 ### Install project dependencies and create the virtual environment
@@ -406,6 +406,13 @@ uv sync
 uv run fastapi dev main.py
 ```
 
+for the frontend
+
+```
+cd frontend
+npm install
+npm
+```
 ### API access should be under these endpoint.
 ```
 API: http://127.0.0.1:8000
@@ -437,8 +444,34 @@ Accepts geographical coordinates, validates the request, creates a recommendatio
 
 \`\`\`json
 {
-  "latitude": 27.7172,
-  "longitude": 85.3240
+  "field_id": "field_001",
+  "latitude": 29.382175,
+  "longitude": 81.870117,
+  "irrigation": false,
+  "bd_reject": 1.75,
+  "clay_max_root_crops": 55,
+  "min_soil_depth_ratio": 0.5,
+  "min_wet_high": 0.55,
+  "min_wet_low": 0.25,
+  "n_ok_g_per_kg": 2,
+  "rain_eff": 0.8,
+  "water_reject_ratio": 0.2,
+  "cyclic": true,
+  "default_family_gap": 2,
+  "harvest_mismatch_tol_days": 20,
+  "max_candidates": 50000,
+  "max_fallow_days": 120,
+  "max_horizon_days": 800,
+  "max_single_crop_days": 300,
+  "require_legume": false,
+  "rotation_length": 3,
+  "start_date": "2026-11-01",
+  "turnaround_days": 10,
+  "food_security": 0.15,
+  "low_risk": 0.3,
+  "profit": 0.5,
+  "soil_health": 0.15,
+  "water_saving": 0.15
 }
 \`\`\`
 
