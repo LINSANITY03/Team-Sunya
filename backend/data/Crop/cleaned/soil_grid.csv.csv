@@ -1,0 +1,13 @@
+Property,Depth,Value,Unit
+ph,30-60cm,6.1,pH
+soc,30-60cm,5.4,g/kg
+clay,30-60cm,17.5,%
+sand,30-60cm,42.7,%
+silt,30-60cm,39.8,%
+bdod,30-60cm,1.4,kg/dm3
+nitrogen,30-60cm,0.78,g/kg
+wv10,30-60cm,34.4,volumetric_percent
+wv33,30-60cm,30.7,volumetric_percent
+wv1500,30-60cm,13.9,volumetric_percent
+awc_fraction,30-60cm,0.16799999999999998,m3/m3
+awc_mm_in_layer,30-60cm,8.399999999999999,mm

@@ -12,3 +12,9 @@ wheels/
 # Virtual environments
 .venv
 node_modules/
+
+# Sensitive files
+*.env
+
+# data
+*MODIS/

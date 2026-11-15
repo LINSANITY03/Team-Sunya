@@ -1,0 +1,20 @@
+Crop ID,Crop Name,Category,Optimal pH Min,Optimal pH Max,Absolute pH Min,Absolute pH Max,Agronomic Notes
+1,Rice,Cereals & pseudocereals,5.5,7.0,4.5,9.0,"Highly adaptable to flooded, wet soils across a wide pH spectrum."
+2,Wheat,"Cereals & pseudocereals, forage/pasture, medicinals & aromatic",6.0,7.0,5.5,8.5,"Does best in neutral to slightly acidic, fertile loam soils."
+3,Maize / Corn,Cereals & pseudocereals,5.0,7.0,4.5,8.5,Sensitive to high acidity; performs poorly if soil is strongly acidic.
+4,Barley,"Cereals & pseudocereals, medicinals & aromatic",6.5,7.5,6.0,8.0,Excellent tolerance to alkaline and moderately saline soil conditions.
+5,Finger Millet,"Cereals & pseudocereals, forage/pasture, environmental",6.0,7.0,5.5,8.2,"Hardy crop that grows well in medium-textured, well-drained soils."
+6,Oat,"Cereals & pseudocereals, cover crop",5.0,6.0,4.5,7.5,Moderately tolerant of acidic conditions compared to other cereals.
+7,Soybean,Pulses (grain legumes),5.5,6.5,4.5,8.4,Prefers slightly acidic soils; crucial for effective nitrogen fixation.
+8,Lentil,"Pulses (grain legumes), medicinals & aromatic",5.5,7.5,4.5,8.2,Thrives in neutral soils close to pH 7; sensitive to waterlogging.
+9,Chickpea,Pulses (grain legumes),6.0,8.5,4.7,9.5,Prefers neutral to slightly alkaline well-drained loam soils.
+10,Pigeonpea,Vegetables,5.0,7.0,4.5,8.4,"Highly adaptable to variable soil types, from sands to heavy clays."
+11,Black Gram,"Pulses (grain legumes), forage/pasture, medicinals & aromatic, cover crop, environmental",5.5,6.5,4.5,7.5,Performs best in well-drained loams or alluvial soils.
+12,Mungbean,"Pulses (grain legumes), forage/pasture, cover crop, environmental",5.5,6.2,4.3,8.3,Prefers well-drained sandy loams; sensitive to waterlogging.
+13,Dhaincha,"Forage/pasture, materials, forest/wood, environmental, weed",5.5,7.0,4.3,9.9,Green manure crop; highly tolerant of alkalinity and waterlogging.
+14,Rapeseed / Mustard,"Forage/pasture, vegetables, materials",6.5,7.6,5.5,8.0,Sensitive to extreme soil acidity; benefits from limed soils.
+15,Linseed / Flax,"Materials, medicinals & aromatic",6.0,6.5,5.5,7.0,"Prefers fertile, well-structured loamy soils."
+16,Potato,"Roots/tubers, medicinals & aromatic",5.0,6.2,4.2,8.5,Prefers acidic soil to suppress common scab disease.
+17,Tobacco,Materials,5.0,6.5,4.5,7.5,"Grows best in light, well-drained, slightly acidic soils."
+18,Jute,Materials,6.5,7.0,5.0,8.6,"Thrives in rich alluvial soils under warm, humid conditions."
+19,Buckwheat,"Cereals & pseudocereals, forage/pasture, vegetables, materials, cover crop",5.0,6.5,4.4,7.5,"Resilient crop capable of growing well in poor, acidic soils."
