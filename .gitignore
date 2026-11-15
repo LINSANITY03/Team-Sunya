@@ -18,3 +18,10 @@ node_modules/
 
 # data
 *MODIS/
+
+# log file
+logs/
+*.log
+
+# db file
+*.db
